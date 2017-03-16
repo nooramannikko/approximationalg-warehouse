@@ -1,8 +1,0 @@
-C:\Users\Noora\ApproximationAlgorithms\ht1\bin\Debug\netcoreapp1.1\ht1.deps.json
-C:\Users\Noora\ApproximationAlgorithms\ht1\bin\Debug\netcoreapp1.1\ht1.runtimeconfig.json
-C:\Users\Noora\ApproximationAlgorithms\ht1\bin\Debug\netcoreapp1.1\ht1.runtimeconfig.dev.json
-C:\Users\Noora\ApproximationAlgorithms\ht1\bin\Debug\netcoreapp1.1\ht1.dll
-C:\Users\Noora\ApproximationAlgorithms\ht1\bin\Debug\netcoreapp1.1\ht1.pdb
-C:\Users\Noora\ApproximationAlgorithms\ht1\obj\Debug\netcoreapp1.1\ht1.AssemblyInfo.cs
-C:\Users\Noora\ApproximationAlgorithms\ht1\obj\Debug\netcoreapp1.1\ht1.dll
-C:\Users\Noora\ApproximationAlgorithms\ht1\obj\Debug\netcoreapp1.1\ht1.pdb
