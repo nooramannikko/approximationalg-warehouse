@@ -9,6 +9,8 @@ namespace ht1
         {
             Console.WriteLine("Welcome to Warehouse Route Planner!");
 
+            var router = new WarehouseRouter();
+
             // Read input and proceed accordingly
             var input = Console.ReadLine();
             do
@@ -20,10 +22,20 @@ namespace ht1
                     if (command.Type == CommandType.SetLayout)
                     {
                         // Store layout
+                        bool success = router.SetLayout(command);
+                        if (!success)
+                        {
+                            Console.WriteLine(Command.GetFileErrorMessage());
+                        }
                     }
                     else if (command.Type == CommandType.SetRequest)
                     {
                         // Store request
+                        bool success = router.SetRequest(command);
+                        if (!success)
+                        {
+                            Console.WriteLine(Command.GetFileErrorMessage());
+                        }
                     }
                     else if (command.Type == CommandType.ProcessRequest)
                     {
@@ -40,6 +52,7 @@ namespace ht1
                 }
                 else
                 {
+                    // Invalid command, print error message and help text
                     Console.WriteLine(Command.GetCommandErrorMessage());
                     Console.WriteLine(Command.GetHelpText());
                 }

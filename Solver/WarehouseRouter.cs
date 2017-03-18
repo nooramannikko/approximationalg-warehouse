@@ -23,8 +23,11 @@ namespace ht1.Solver
 
         public bool SetRequest(Command command)
         {
-            // TODO
-            return true;
+            var request = Request.Create(command.CommandArgFile, command.RequestName);
+            // Remove previous requests with same name
+            Requests.RemoveAll(req => req.Name == request.Name);
+            Requests.Add(request);
+            return request.Valid;
         }
     }
 }
