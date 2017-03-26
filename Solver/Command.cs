@@ -35,9 +35,10 @@ namespace ht1.Solver
         public bool IsValid()
         {
             // Layout and request command require files as parameter
-            if ((Type == CommandType.Unknown) || (Type == CommandType.ProcessRequest && ProcessMode == RequestProcessMode.Unknown)
+            if ((Type == CommandType.Unknown) 
+                || (Type == CommandType.ProcessRequest && (ProcessMode == RequestProcessMode.Unknown || string.IsNullOrEmpty(RequestName))
                 || (Type == CommandType.SetLayout && string.IsNullOrEmpty(CommandArgFile)
-                || (Type == CommandType.SetRequest && string.IsNullOrEmpty(CommandArgFile) && string.IsNullOrEmpty(RequestName))))
+                || (Type == CommandType.SetRequest && string.IsNullOrEmpty(CommandArgFile) && string.IsNullOrEmpty(RequestName)))))
             {
                 return false;
             }

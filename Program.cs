@@ -27,6 +27,10 @@ namespace ht1
                         {
                             Console.WriteLine(Command.GetFileErrorMessage());
                         }
+                        else
+                        {
+                            Console.WriteLine("Layout set successfully");
+                        }
                     }
                     else if (command.Type == CommandType.SetRequest)
                     {
@@ -35,6 +39,10 @@ namespace ht1
                         if (!success)
                         {
                             Console.WriteLine(Command.GetFileErrorMessage());
+                        }
+                        else
+                        {
+                            Console.WriteLine("Request stored successfully");
                         }
                     }
                     else if (command.Type == CommandType.ProcessRequest)

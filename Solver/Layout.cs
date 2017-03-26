@@ -128,19 +128,14 @@ namespace ht1.Solver
 
         public double SquareDistance { get; set; }
 
-        public double Distance
-        {
-            get
-            {
-                return System.Math.Sqrt(SquareDistance);
-            }
-        }
+        public double Distance { get; set; }
 
         public DistanceItem()
         {
             Item1 = new ItemBin();
             Item2 = new ItemBin();
             SquareDistance = 0;
+            Distance = 0;
         }
 
         public DistanceItem(ItemBin bin1, ItemBin bin2)
@@ -148,6 +143,7 @@ namespace ht1.Solver
             Item1 = bin1;
             Item2 = bin2;
             SquareDistance = Item1.Location.GetSquareDistance(Item2.Location);
+            Distance = System.Math.Sqrt(SquareDistance);
         }
     }
 }
