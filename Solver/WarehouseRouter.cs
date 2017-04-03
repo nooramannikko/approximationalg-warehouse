@@ -28,9 +28,10 @@ namespace ht1.Solver
             return request.Valid;
         }
 
-        public bool FindRoute(Command command, out List<Route> route)
+        public bool FindRoute(Command command, out string route)
         {
-            route = new List<Route>();
+            route = "";
+            var result = new List<Route>();
             var request = Requests.Find(req => req.Name == command.RequestName);
             if (request == null)
             {
@@ -38,17 +39,20 @@ namespace ht1.Solver
                 return false;
             }
 
-            var success = false;
             if (command.ProcessMode == RequestProcessMode.NearestAddition)
             {
                 // Find route with nearest addition algorithm
-                route = NearestAddition(request);
+                result = NearestAddition(request);
             }
             else if (command.ProcessMode == RequestProcessMode.Bruteforce)
             {
                 // Find route with brute force
             }
-            return success;
+            foreach (var r in result)
+            {
+                route += r.StartPoint.Identifier.ToString() + " ";
+            }
+            return true;
         }
 
         private List<Route> NearestAddition(Request request)
@@ -70,7 +74,7 @@ namespace ht1.Solver
                 {
                     var bin = Layout.ItemBins.Find(b => b.Identifier == target);
                     var distanceItem = Layout.DistanceTable.Find(d => (d.Item1.Identifier == 0 && d.Item2.Identifier == target) || (d.Item1.Identifier == target && d.Item2.Identifier == 0));
-                    if (bin != null && distanceItem != null && currentBestDistance != null && distanceItem.SquareDistance < currentBestDistance.Distance)
+                    if (bin != null && distanceItem != null && (currentBestDistance == null || distanceItem.SquareDistance < currentBestDistance.SquareDistance))
                     {
                         currentBestBin = bin;
                         currentBestDistance = distanceItem;
@@ -84,7 +88,11 @@ namespace ht1.Solver
                     result.Add(new Route(currentBestBin, currentBestDistance.Distance));
                     // Remove found target
                     targets.RemoveAll(t => t == currentBestBin.Identifier);
+                    System.Console.WriteLine(currentBestDistance.Distance.ToString());
                 }
+
+                System.Console.WriteLine("Current route: " + result[0].StartPoint.Identifier.ToString() + "(" + result[0].Length.ToString() + ") "
+                    + result[1].StartPoint.Identifier.ToString() + "(" + result[1].Length.ToString() + ")");
 
                 var allTargetsAdded = (targets.Count == 0);
                 while (!allTargetsAdded)
@@ -92,6 +100,8 @@ namespace ht1.Solver
                     currentBestBin = null;
                     DistanceItem distLeft = null;
                     DistanceItem distRight = null;
+                    DistanceItem currentBestLeft = null;
+                    DistanceItem currentBestRight = null;
                     double currentBestAddedDistance = -1;
                     int currentPosToAdd = -1;
                     for (int i = 0; i < result.Count; i++)
@@ -107,25 +117,36 @@ namespace ht1.Solver
                                 || (d.Item1.Identifier == target && d.Item2.Identifier == currentRouteItem.StartPoint.Identifier));
                             distRight = Layout.DistanceTable.Find(d => (d.Item1.Identifier == nextRouteItem.StartPoint.Identifier && d.Item2.Identifier == target) 
                                 || (d.Item1.Identifier == target && d.Item2.Identifier == nextRouteItem.StartPoint.Identifier));
+                            System.Console.WriteLine("Pair " + currentRouteItem.StartPoint.Identifier.ToString() + " " + nextRouteItem.StartPoint.Identifier.ToString() + "; Target: " + target);
+                            System.Console.WriteLine("DistLeft: " + distLeft.Distance.ToString() + "; DistRight: " + distRight.Distance.ToString() + "; CurrentLength: " + currentRouteItem.Length.ToString());
                             if (currentBestAddedDistance < 0 || currentBestAddedDistance > (distLeft.Distance + distRight.Distance - currentRouteItem.Length))
                             {
                                 currentPosToAdd = i;
                                 currentBestAddedDistance = distLeft.Distance + distRight.Distance - currentRouteItem.Length;
                                 currentBestBin = (distLeft.Item1.Identifier == target) ? distLeft.Item1 : distLeft.Item2;
+                                currentBestLeft = distLeft;
+                                currentBestRight = distRight;
                             }
                         }
                     }
-                    if (currentBestBin != null && distLeft != null && distRight != null 
-                    && currentBestAddedDistance > -1 && currentPosToAdd >= 0)
+                    if (currentBestBin != null && currentBestLeft != null && currentBestRight != null 
+                        && currentBestAddedDistance > -1 && currentPosToAdd >= 0)
                     {
                         // Update distance to adjacent bin
-                        result[currentPosToAdd].Length = distLeft.Distance;
+                        result[currentPosToAdd].Length = currentBestLeft.Distance;
                         // Add new bin between i and i + 1
-                        result.Insert(currentPosToAdd + 1, new Route(currentBestBin, distRight.Distance));
+                        result.Insert(currentPosToAdd + 1, new Route(currentBestBin, currentBestRight.Distance));
                         // Remove found target
                         targets.RemoveAll(t => t == currentBestBin.Identifier);
                     }
                     allTargetsAdded = (targets.Count == 0);
+
+                    var routeString = "";
+                    foreach (var r in result)
+                    {
+                        routeString += r.StartPoint.Identifier.ToString() + " (" + r.Length.ToString() + ") ";
+                    }
+                    System.Console.WriteLine("Current route: " + routeString);
                 }
             }
             return result;

@@ -48,6 +48,16 @@ namespace ht1
                     else if (command.Type == CommandType.ProcessRequest)
                     {
                         // Run solver
+                        string route;
+                        bool success = router.FindRoute(command, out route);
+                        if (success)
+                        {
+                            Console.WriteLine(route);
+                        }
+                        else
+                        {
+                            Console.WriteLine("The given request doesn't exist");
+                        }
                     }
                     else if (command.Type == CommandType.Help)
                     {
