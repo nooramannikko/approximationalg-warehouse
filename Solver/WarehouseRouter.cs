@@ -93,11 +93,7 @@ namespace ht1.Solver
                     result.Add(new Route(currentBestBin, currentBestDistance.Distance));
                     // Remove found target
                     targets.RemoveAll(t => t == currentBestBin.Identifier);
-                    //System.Console.WriteLine(currentBestDistance.Distance.ToString());
                 }
-
-                /*System.Console.WriteLine("Current route: " + result[0].StartPoint.Identifier.ToString() + "(" + result[0].Length.ToString() + ") "
-                    + result[1].StartPoint.Identifier.ToString() + "(" + result[1].Length.ToString() + ")");*/
 
                 var allTargetsAdded = (targets.Count == 0);
                 while (!allTargetsAdded)
@@ -122,8 +118,6 @@ namespace ht1.Solver
                                 || (d.Item1.Identifier == target && d.Item2.Identifier == currentRouteItem.StartPoint.Identifier));
                             distRight = Layout.DistanceTable.Find(d => (d.Item1.Identifier == nextRouteItem.StartPoint.Identifier && d.Item2.Identifier == target) 
                                 || (d.Item1.Identifier == target && d.Item2.Identifier == nextRouteItem.StartPoint.Identifier));
-                            //System.Console.WriteLine("Pair " + currentRouteItem.StartPoint.Identifier.ToString() + " " + nextRouteItem.StartPoint.Identifier.ToString() + "; Target: " + target);
-                            //System.Console.WriteLine("DistLeft: " + distLeft.Distance.ToString() + "; DistRight: " + distRight.Distance.ToString() + "; CurrentLength: " + currentRouteItem.Length.ToString());
                             if (currentBestAddedDistance < 0 || currentBestAddedDistance > (distLeft.Distance + distRight.Distance - currentRouteItem.Length))
                             {
                                 currentPosToAdd = i;
@@ -145,13 +139,6 @@ namespace ht1.Solver
                         targets.RemoveAll(t => t == currentBestBin.Identifier);
                     }
                     allTargetsAdded = (targets.Count == 0);
-
-                    var routeString = "";
-                    foreach (var r in result)
-                    {
-                        routeString += r.StartPoint.Identifier.ToString() + " (" + r.Length.ToString() + ") ";
-                    }
-                    System.Console.WriteLine("Current route: " + routeString);
                 }
             }
             return result;
@@ -159,8 +146,7 @@ namespace ht1.Solver
 
         private List<Route> BruteForce(Request request)
         {
-            // Initial result contains the starting position of the robot ang route length 0
-            var result = new List<Route>() { new Route() };
+            var result = new List<Route>();
 
             if (request.Targets.Count > 0)
             {
@@ -170,15 +156,6 @@ namespace ht1.Solver
 
                 // Create all possible permutations of routes
                 var permutations = GetPermutations(targets);
-                /*foreach (var perm in permutations)
-                {
-                    var permString = "";
-                    foreach (var p in perm)
-                    {
-                        permString += p.ToString() + " ";
-                    }
-                    System.Console.WriteLine(permString);
-                }*/
 
                 // Calculate routes for all permutations
                 // Keep track of the best route
@@ -217,9 +194,16 @@ namespace ht1.Solver
                     if (length > -1 && (currentBestLength < 0 || currentBestLength > length))
                     {
                         currentBestLength = length;
-                        currentBestRoute = new List<Route>(currentBestRoute);
+                        currentBestRoute = new List<Route>(currentRoute);
                     }
                 }
+                result = currentBestRoute;
+            }
+
+            if (result.Count == 0)
+            {
+                // Initial result contains the starting position of the robot and route length 0
+                result.Add(new Route());
             }
             return result;
         }

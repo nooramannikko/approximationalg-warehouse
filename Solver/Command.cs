@@ -48,7 +48,6 @@ namespace ht1.Solver
         public static Command CreateCommand(string commandText)
         {
             var result = new Command();
-            // TODO: parse commandText
             if (!string.IsNullOrEmpty(commandText))
             {
                 var parts = commandText.Split(' ');
